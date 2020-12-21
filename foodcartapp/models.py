@@ -92,6 +92,21 @@ class Order(models.Model):
         verbose_name = 'заказ'
         verbose_name_plural = 'заказы'
 
+
 class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name='items'
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE,
+        related_name='order_items',
+        verbose_name='Товар'
+    )
+    quantity = models.PositiveSmallIntegerField(
+        'Количество',
+        default=1)
+
     class Meta:
-        ve
+        verbose_name = 'Содержимое заказа'
