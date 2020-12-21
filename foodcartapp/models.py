@@ -5,7 +5,8 @@ from django.db import models
 class Restaurant(models.Model):
     name = models.CharField('название', max_length=50)
     address = models.CharField('адрес', max_length=100, blank=True)
-    contact_phone = models.CharField('контактный телефон', max_length=50, blank=True)
+    contact_phone = models.CharField(
+        'контактный телефон', max_length=50, blank=True)
 
     def __str__(self):
         return self.name
@@ -37,7 +38,8 @@ class Product(models.Model):
                                  verbose_name='категория', related_name='products')
     price = models.DecimalField('цена', max_digits=8, decimal_places=2)
     image = models.ImageField('картинка')
-    special_status = models.BooleanField('спец.предложение', default=False, db_index=True)
+    special_status = models.BooleanField(
+        'спец.предложение', default=False, db_index=True)
     description = models.TextField('описание', max_length=200, blank=True)
 
     objects = ProductQuerySet.as_manager()
@@ -51,9 +53,12 @@ class Product(models.Model):
 
 
 class RestaurantMenuItem(models.Model):
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='menu_items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='menu_items')
-    availability = models.BooleanField('в продаже', default=True, db_index=True)
+    restaurant = models.ForeignKey(
+        Restaurant, on_delete=models.CASCADE, related_name='menu_items')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='menu_items')
+    availability = models.BooleanField(
+        'в продаже', default=True, db_index=True)
 
     def __str__(self):
         return f"{self.restaurant.name} - {self.product.name}"
@@ -64,3 +69,29 @@ class RestaurantMenuItem(models.Model):
         unique_together = [
             ['restaurant', 'product']
         ]
+
+
+class Order(models.Model):
+
+    customer_name = models.CharField(
+        verbose_name='Имя клиента',
+        max_length=50)
+    customer_lastname = models.CharField(
+        verbose_name='Фамилия клиента', max_length=50)
+    customer_phonenumber = models.CharField(
+        verbose_name='Номер телефона клиента', max_length=25)
+    customer_address = models.CharField(
+        max_length=500,
+        verbose_name='Адрес клиента',
+    )
+
+    def __str__(self):
+        return f'{self.customer_name} {self.customer_lastname} {self.customer_address}'
+
+    class Meta:
+        verbose_name = 'заказ'
+        verbose_name_plural = 'заказы'
+
+class OrderItem(models.Model):
+    class Meta:
+        ve
