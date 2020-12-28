@@ -9,6 +9,9 @@ from rest_framework import status
 
 from .models import Product, Order, OrderItem
 
+from .models import Product, Order, OrderItem
+from .serializers import OrderSerializer
+
 
 def banners_list_api(request):
     # FIXME move data to db?
@@ -62,23 +65,28 @@ def product_list_api(request):
     })
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def register_order(request):
-    try:
-        print(request.data)
-        order_data = request.data
-        order = Order.objects.create(
-            customer_name=order_data['firstname'],
-            customer_lastname=order_data['lastname'],
-            customer_phonenumber=order_data['phonenumber'],
-            customer_address=order_data['address'])
-        for product in order_data['products']:
-            OrderItem.objects.create(
-                product_id=product['product'],
-                quantity=product['quantity'],
-                order=order,
-            )
-    except ValueError:
-        return Response(order_data, status=status.HTTP_201_CREATED)
+    serializer = OrderSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    data = serializer.validated_data
+# @api_view(['POST'])
+# def register_order(request):
+#     try:
+#         print(request.data)
+#         order_data = request.data
+#         order = Order.objects.create(
+#             customer_name=order_data['firstname'],
+#             customer_lastname=order_data['lastname'],
+#             customer_phonenumber=order_data['phonenumber'],
+#             customer_address=order_data['address'])
+#         for product in order_data['products']:
+#             OrderItem.objects.create(
+#                 product_id=product['product'],
+#                 quantity=product['quantity'],
+#                 order=order,
+#             )
+#     except (ValueError, TypeError):
+#         return Response(order_data, status=status.HTTP_201_CREATED)
 
-    return Response(None, status=status.HTTP_400_BAD_REQUEST)
+#     return Response(None, status=status.HTTP_400_BAD_REQUEST)
