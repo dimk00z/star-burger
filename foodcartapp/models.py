@@ -73,20 +73,20 @@ class RestaurantMenuItem(models.Model):
 
 class Order(models.Model):
 
-    customer_name = models.CharField(
+    firstname = models.CharField(
         verbose_name='Имя клиента',
         max_length=50)
-    customer_lastname = models.CharField(
+    lastname = models.CharField(
         verbose_name='Фамилия клиента', max_length=50)
-    customer_phonenumber = models.CharField(
+    phonenumber = models.CharField(
         verbose_name='Номер телефона клиента', max_length=25)
-    customer_address = models.CharField(
+    address = models.CharField(
         max_length=500,
         verbose_name='Адрес клиента',
     )
 
     def __str__(self):
-        return f'{self.id}. {self.customer_name} {self.customer_lastname}'
+        return f'{self.id}. {self.firstname} {self.lastname}'
 
     class Meta:
         verbose_name = 'заказ'
@@ -97,11 +97,12 @@ class OrderItem(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
-        related_name='items'
+        related_name='products',
+        verbose_name='Заказ'
     )
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE,
-        related_name='order_items',
+        related_name='orders',
         verbose_name='Товар'
     )
     quantity = models.PositiveSmallIntegerField(
