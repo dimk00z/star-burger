@@ -1,11 +1,13 @@
 from http.client import NO_CONTENT
-import json
+
 from django.http import JsonResponse
 from django.templatetags.static import static
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+
 
 from .models import Product, Order, OrderItem
 
@@ -66,12 +68,13 @@ def product_list_api(request):
 
 
 @api_view(["POST"])
+@renderer_classes((JSONRenderer, BrowsableAPIRenderer))
 def register_order(request):
     order_serializer = OrderSerializer(data=request.data)
     order_serializer.is_valid(
         raise_exception=True)
     validated_order = order_serializer.validated_data
-    order = Order.objects.create(
+    new_order = Order.objects.create(
         firstname=validated_order['firstname'],
         lastname=validated_order['lastname'],
         phonenumber=validated_order['phonenumber'],
@@ -80,10 +83,10 @@ def register_order(request):
         OrderItem(
             product_id=product['product'].id,
             quantity=product['quantity'],
-            order=order
+            order=new_order
         )
         for product in validated_order['products']
     ]
     OrderItem.objects.bulk_create(order_items)
-    return Response(request.data,
-                    status=status.HTTP_201_CREATED)
+    serializer = OrderSerializer(new_order)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
