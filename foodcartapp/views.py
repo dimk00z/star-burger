@@ -83,7 +83,8 @@ def register_order(request):
         OrderItem(
             product_id=product['product'].id,
             quantity=product['quantity'],
-            order=new_order
+            order=new_order,
+            price=product['quantity']*product['product'].price
         )
         for product in validated_order['products']
     ]

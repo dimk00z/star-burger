@@ -108,6 +108,8 @@ class OrderItem(models.Model):
     quantity = models.PositiveSmallIntegerField(
         'Количество',
         default=1)
+    price = models.DecimalField(
+        'Цена заказа', max_digits=8, decimal_places=2)
 
     class Meta:
         verbose_name = 'Содержимое заказа'
