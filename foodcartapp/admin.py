@@ -1,6 +1,7 @@
 from django.contrib import admin
-from django.shortcuts import reverse
+from django.shortcuts import reverse, redirect
 from django.utils.html import format_html
+from django.utils.http import is_safe_url
 
 from .models import Product
 from .models import ProductCategory
@@ -116,3 +117,11 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [
         OrderItemInline,
     ]
+
+    def response_change(self, request, obj):
+        url = request.GET.get('next')
+        if url and is_safe_url(url=url,
+                               allowed_hosts=request.get_host()):
+            return redirect(url)
+        return super(OrderAdmin, self).response_change(
+            request, obj)
