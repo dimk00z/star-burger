@@ -89,13 +89,17 @@ class Order(models.Model):
         verbose_name='Имя клиента',
         max_length=50)
     lastname = models.CharField(
-        verbose_name='Фамилия клиента', max_length=50)
+        verbose_name='Фамилия клиента',
+        max_length=50)
     phonenumber = models.CharField(
-        verbose_name='Номер телефона клиента', max_length=25)
+        verbose_name='Номер телефона клиента',
+        max_length=25)
     address = models.CharField(
         max_length=500,
         verbose_name='Адрес клиента',
     )
+    comment = models.TextField('Комментарий',
+                               blank=True)
 
     def __str__(self):
         return f'{self.id}. {self.firstname} {self.lastname}'
