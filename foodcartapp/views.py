@@ -2,6 +2,7 @@ from http.client import NO_CONTENT
 
 from django.http import JsonResponse
 from django.templatetags.static import static
+from django.db.transaction import atomic
 
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
@@ -67,6 +68,7 @@ def product_list_api(request):
     })
 
 
+@atomic
 @api_view(["POST"])
 @renderer_classes((JSONRenderer, BrowsableAPIRenderer))
 def register_order(request):
@@ -79,6 +81,7 @@ def register_order(request):
         lastname=validated_order['lastname'],
         phonenumber=validated_order['phonenumber'],
         address=validated_order['address'])
+    # 0/0
     order_items = [
         OrderItem(
             product_id=product['product'].id,
