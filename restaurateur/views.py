@@ -3,13 +3,13 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
-
+from django.db.models import DecimalField, F, Sum
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
 from django.db.models import Sum
 
-from foodcartapp.models import Product, Restaurant, Order
+from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
 
 
 class Login(forms.Form):
@@ -99,7 +99,26 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
+    orders = [
+        {
+            'id': order.id,
+            'status': order.get_status_display(),
+            'firstname': order.firstname,
+            'phonenumber': order.phonenumber,
+            'lastname': order.lastname,
+            'address': order.address,
+            'comment': order.comment,
+            'payment_type': order.get_payment_type_display(),
+            'total_amount': order.products.all().aggregate(
+                total_amount=Sum(F('price') * F('quantity'),
+                                 output_field=DecimalField(max_digits=8,
+                                                           decimal_places=2)
+                                 )
+            )['total_amount'],
+        }
+        for order in Order.objects.all().order_by('-id')
+
+    ]
     return render(request, template_name='order_items.html', context={
-        # 'order_items': Order.objects.all(),
-        'order_items': Order.objects.annotate(order_price=Sum('products__price'))
+        'order_items': orders
     })

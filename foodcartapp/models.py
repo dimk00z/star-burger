@@ -113,7 +113,6 @@ class Order(models.Model):
     delivered_at = models.DateTimeField('Время доставки',
                                         blank=True,
                                         null=True)
-    payment_type = verbose_name = 'Статус заказа',
     max_length = 11,
     payment_type = models.CharField(
         verbose_name='Способ оплаты',
