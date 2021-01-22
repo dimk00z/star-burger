@@ -97,6 +97,15 @@ def view_restaurants(request):
     })
 
 
+def get_order_restaurants(order):
+    restaurants = set()
+    for item in order.products.all():
+        for menu_item in item.product.menu_items.filter(
+                availability=True):
+            restaurants.add(menu_item.restaurant)
+    return restaurants
+
+
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
     orders = [
@@ -115,6 +124,7 @@ def view_orders(request):
                                                            decimal_places=2)
                                  )
             )['total_amount'],
+            'restaurants':get_order_restaurants(order),
         }
         for order in Order.objects.all().order_by('-id')
 

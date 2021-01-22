@@ -37,7 +37,9 @@
                         Развернуть
                     </summary>
                     <ul>
-
+                        {% for restaurant in item.restaurants %}
+                        <li>{{ restaurant.name }}</li>
+                        {% endfor %}
                     </ul>
                 </details>
             </td>
