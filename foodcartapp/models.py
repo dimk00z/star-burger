@@ -80,6 +80,10 @@ class Order(models.Model):
         ('done', 'Выполнен'),
         ('canceled', 'Отменен'),
     ]
+    PAYMENT_CHOICES = [
+        ('cash', 'Наличные'),
+        ('card', 'Картой'),
+    ]
     status = models.CharField(
         verbose_name='Статус заказа',
         max_length=11,
@@ -109,6 +113,14 @@ class Order(models.Model):
     delivered_at = models.DateTimeField('Время доставки',
                                         blank=True,
                                         null=True)
+    payment_type = verbose_name = 'Статус заказа',
+    max_length = 11,
+    payment_type = models.CharField(
+        verbose_name='Способ оплаты',
+        max_length=11,
+        choices=PAYMENT_CHOICES,
+        default='cash',
+    )
 
     def __str__(self):
         return f'{self.id}. {self.firstname} {self.lastname}'
