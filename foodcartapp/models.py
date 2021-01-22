@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 
 class Restaurant(models.Model):
@@ -100,6 +101,14 @@ class Order(models.Model):
     )
     comment = models.TextField('Комментарий',
                                blank=True)
+    registered_at = models.DateTimeField('Время создания',
+                                         default=timezone.now)
+    called_at = models.DateTimeField('Время звонка',
+                                     blank=True,
+                                     null=True)
+    delivered_at = models.DateTimeField('Время доставки',
+                                        blank=True,
+                                        null=True)
 
     def __str__(self):
         return f'{self.id}. {self.firstname} {self.lastname}'
