@@ -1,18 +1,23 @@
 import os
+import environ
 
 import dj_database_url
 
+root = environ.Path(__file__) - 3  # get root of the project
+env = environ.Env()
+environ.Env.read_env()  # reading .env file
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+SITE_ROOT = root()
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'j#jww5g6d96bi#kbfpq%mgblr8^yg8$zmmg+c6dm+bxfa*&c+l'
+SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = env.bool('DEBUG', default=False)
+YANDEX_API_KEY = env.str('YANDEX_API_KEY')
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
