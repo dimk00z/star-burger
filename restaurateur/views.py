@@ -9,7 +9,9 @@ from django.contrib.auth import views as auth_views
 from django.db.models import Sum
 
 from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
+
 from StarBurger.settings import YANDEX_API_KEY
+from .utils import get_distance
 
 
 class Login(forms.Form):

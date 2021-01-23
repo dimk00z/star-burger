@@ -1,4 +1,5 @@
 import requests
+from geopy.distance import distance
 
 
 def fetch_coordinates(apikey, place):
@@ -12,3 +13,15 @@ def fetch_coordinates(apikey, place):
     lon, lat = most_relevant['GeoObject']['Point']['pos'].split(' ')
 
     return lon, lat
+
+
+def get_distance(apikey, first_place, second_place):
+    try:
+        first_coords = fetch_coordinates(apikey, first_place)
+        second_coords = fetch_coordinates(apikey, second_place)
+    except IndexError:
+        return None
+
+    result_distance = distance(first_coords, second_coords)
+
+    return result_distance
